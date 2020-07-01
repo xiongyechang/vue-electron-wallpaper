@@ -1,0 +1,93 @@
+{
+  "id": "1822918",
+  "name": "player",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "227817",
+      "name": "box-empty",
+      "font_class": "box-empty",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "7008956",
+      "name": "like",
+      "font_class": "like1",
+      "unicode": "e707",
+      "unicode_decimal": 59143
+    },
+    {
+      "icon_id": "13660607",
+      "name": "upload",
+      "font_class": "upload",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
+      "icon_id": "1445050",
+      "name": "pause",
+      "font_class": "pause",
+      "unicode": "e836",
+      "unicode_decimal": 59446
+    },
+    {
+      "icon_id": "5875533",
+      "name": "play",
+      "font_class": "play",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "14418330",
+      "name": "like",
+      "font_class": "like",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "128738",
+      "name": "share",
+      "font_class": "share",
+      "unicode": "e6ce",
+      "unicode_decimal": 59086
+    },
+    {
+      "icon_id": "1000826",
+      "name": "voice",
+      "font_class": "voice",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "7207736",
+      "name": "list",
+      "font_class": "list",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "9080942",
+      "name": "sort",
+      "font_class": "sort",
+      "unicode": "e672",
+      "unicode_decimal": 58994
+    },
+    {
+      "icon_id": "12578928",
+      "name": "random",
+      "font_class": "random",
+      "unicode": "e6e2",
+      "unicode_decimal": 59106
+    },
+    {
+      "icon_id": "13725236",
+      "name": "CirculationOutline",
+      "font_class": "CirculationOutline",
+      "unicode": "e66a",
+      "unicode_decimal": 58986
+    }
+  ]
+}

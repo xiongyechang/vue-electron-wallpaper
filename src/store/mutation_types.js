@@ -1,0 +1,2 @@
+export const SET_QINIU_TOKEN = "SET_QINIU_TOKEN";
+export const SET_QINIU_DOMAIN = "SET_QINIU_DOMAIN";

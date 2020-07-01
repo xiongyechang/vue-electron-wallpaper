@@ -1,0 +1,70 @@
+{
+  "name": "vue-electron-wallpaper",
+  "version": "1.1.1",
+  "private": true,
+  "description": "electron vue 壁纸软件",
+  "author": "熊业昌",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "electron:build": "vue-cli-service electron:build --all",
+    "electron:build:linux": "vue-cli-service electron:build --linux",
+    "electron:build:windows": "vue-cli-service electron:build --win",
+    "electron:serve": "vue-cli-service electron:serve",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
+  },
+  "main": "background.js",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "core-js": "^3.6.4",
+    "dayjs": "^1.8.27",
+    "electron-drag": "^1.2.2",
+    "element-ui": "^2.13.2",
+    "fs-extra": "^9.0.1",
+    "lodash": "^4.17.15",
+    "mime": "^2.4.6",
+    "qiniu-js": "^3.0.2",
+    "randomstring": "^1.1.5",
+    "spark-md5": "^3.0.1",
+    "vue": "^2.6.11",
+    "vue-router": "^3.3.4",
+    "vuex": "^3.4.0",
+    "wallpaper": "^4.4.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.4.4",
+    "@vue/cli-plugin-eslint": "^4.4.4",
+    "@vue/cli-service": "^4.4.4",
+    "babel-eslint": "^10.0.3",
+    "babel-polyfill": "^6.26.0",
+    "electron": "^8.2.0",
+    "electron-updater": "^4.3.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^8.0.2",
+    "vue-cli-plugin-electron-builder": "~1.4.6",
+    "vue-loader": "^15.9.2",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}

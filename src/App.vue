@@ -29,7 +29,7 @@ export default {
   components: { TopBar, NavMenu, UpdateDialog },
   data() {
     return {
-      visible: false
+      visible: false,
     };
   },
 
@@ -38,7 +38,7 @@ export default {
     ipcRenderer.send(checkForUpdate);
 
     // 有更新
-    ipcRenderer.on(isUpdate, event => {
+    ipcRenderer.on(isUpdate, (event) => {
       this.visible = true;
     });
 
@@ -62,7 +62,7 @@ export default {
         const imagePath = path.join(remote.app.getPath("downloads"), name);
         const notification = new Notification("图片下载通知", {
           body: "图片下载成功",
-          icon: imagePath
+          icon: imagePath,
         });
 
         notification.addEventListener("click", function() {
@@ -78,7 +78,7 @@ export default {
     if (theme) {
       document.documentElement.style.setProperty("--primary-color", theme);
     }
-  }
+  },
 };
 </script>
 
@@ -246,5 +246,8 @@ button {
 }
 .el-select-dropdown__item.selected {
   color: var(--primary-color) !important;
+}
+.el-progress-bar__inner {
+  background-color: var(--primary-color) !important;
 }
 </style>

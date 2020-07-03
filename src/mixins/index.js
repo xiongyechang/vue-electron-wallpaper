@@ -3,6 +3,8 @@ import { mapGetters, mapActions } from "vuex";
 const randomstring = require("randomstring");
 import https from "https";
 import http from "http";
+import { remote } from "electron";
+import { uploadProgress } from "@/models/update";
 
 import fs from "fs";
 import { SET_QINIU_TOKEN, SET_QINIU_DOMAIN } from "@/store/mutation_types";
@@ -94,10 +96,13 @@ export default {
           config
         );
 
+        let mainWindow = remote.BrowserWindow.getFocusedWindow();
+
         // var subscription = observable.subscribe(observer) // 上传开始
         observable.subscribe(
           (res) => {
-            console.log("上传进度:", res);
+            // console.log("上传进度:", res);
+            mainWindow.webContents.send(uploadProgress, res);
           },
           (e) => {
             reject(e);

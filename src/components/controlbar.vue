@@ -44,7 +44,7 @@
           <el-upload
             v-else
             ref="upload"
-            action=""
+            action
             drag
             accept="image/*"
             :http-request="upload"
@@ -52,9 +52,17 @@
           >
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">
-              将文件拖到此处，或<em>点击上传</em>
+              将文件拖到此处，或
+              <em>点击上传</em>
             </div>
           </el-upload>
+          <el-progress v-show="progress" :percentage="progress"></el-progress>
+          <div
+            v-if="uploadWay === 0 && ruleForm.uri"
+            style="font-size: 12px;color: lightgray;"
+          >
+            图片链接:{{ ruleForm.uri }}
+          </div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -66,7 +74,7 @@
 </template>
 
 <script>
-import { remote } from "electron";
+import { remote, ipcRenderer } from "electron";
 import SparkMD5 from "spark-md5";
 import Mixins from "@/mixins";
 import mime from "mime";
@@ -75,6 +83,7 @@ import { WallpaperService, WallpaperTypeService } from "@/services";
 import { isURL } from "@/utils/utils";
 import fs from "fs";
 import fse from "fs-extra";
+import { uploadProgress } from "@/models/update";
 export default {
   name: "controlbar",
   props: {
@@ -91,12 +100,19 @@ export default {
     },
   },
   data() {
+    const checkURL = function(rule, value, callback) {
+      if (isURL(value)) {
+        callback();
+      } else {
+        return callback(new TypeError("图片链接不合法"));
+      }
+    };
+
     return {
       visible: false,
       options: [],
       progress: 0,
       fileInfo: null,
-      count: 0,
       uploadWay: 1,
       ruleForm: {
         type: "",
@@ -108,10 +124,11 @@ export default {
         name: [{ required: true, message: "请输入图片名称", trigger: "blur" }],
         uri: [
           {
-            type: "url",
-            required: true,
+            // type: "url",
+            // required: true,
             message: "请输入图片链接或上传图片",
-            trigger: "blur",
+            validate: checkURL,
+            trigger: "change",
           },
         ],
       },
@@ -139,6 +156,11 @@ export default {
       localStorage.setItem("theme", n);
       document.documentElement.style.setProperty("--primary-color", n);
     });
+
+    ipcRenderer.on(uploadProgress, (event, data) => {
+      let { total } = data;
+      this.progress = +total.percent;
+    });
   },
   methods: {
     batchDownload() {
@@ -151,11 +173,9 @@ export default {
         });
         return;
       }
-      console.log(this.selectedImageList);
       const mainWindow = remote.BrowserWindow.getFocusedWindow();
       for (let uri of this.selectedImageList) {
         let e = mainWindow.webContents.downloadURL(uri);
-        console.log(e);
       }
     },
     uriChange(uri) {
@@ -167,7 +187,7 @@ export default {
           fs.writeFileSync(filePath, r, "binary");
           let f = fs.readFileSync(filePath);
           this.upload({
-            file: new File([f], fileName, {
+            file: new File([f], encodeURIComponent(fileName), {
               type: mime.getType(uri),
             }),
           });
@@ -189,9 +209,17 @@ export default {
               new Notification("图片上传成功", {
                 icon: this.ruleForm.uri,
               });
-              this.visible = false;
+              this.clear();
             } else {
-              new Notification("图片上传失败");
+              new Notification("图片上传失败!", {
+                icon: path.join(
+                  process.cwd(),
+                  "src",
+                  "assets",
+                  "img",
+                  "fail.png"
+                ),
+              });
             }
           });
         } else {
@@ -199,15 +227,20 @@ export default {
         }
       });
     },
-    closeDialog() {
+    clear() {
       this.$refs.upload && this.$refs.upload.clearFiles();
       this.ruleForm.name = "";
+      this.ruleForm.uri = "";
+      this.progress = 0;
+      this.fileInfo = null;
+    },
+    closeDialog() {
+      this.clear();
     },
     upload(request) {
       let { file } = request,
         that = this;
 
-      //
       if (file.size < 1024 * 300) {
         alert("图片大小必须大于300kb");
         this.$refs.upload && this.$refs.upload.clearFiles();
@@ -226,7 +259,7 @@ export default {
           if (r.status === 0) {
             that.fileInfo = {
               file,
-              name: that.ruleForm.name || file.name,
+              name: that.ruleForm.name,
               type: that.ruleForm.type,
               mime: file.type,
               size: file.size,
@@ -242,7 +275,15 @@ export default {
                 console.log(that.ruleForm);
               })
               .catch((e) => {
-                new Notification("图片上传失败");
+                new Notification("图片上传到七牛云失败", {
+                  icon: path.join(
+                    process.cwd(),
+                    "src",
+                    "assets",
+                    "img",
+                    "fail.png"
+                  ),
+                });
                 that.ruleForm.name = "";
                 that.$refs.upload.clearFiles();
               });

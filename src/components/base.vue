@@ -22,11 +22,11 @@ export default {
     },
     handleCurrentChange(page) {
       this.page = page;
-      this.fetchData(page, this.limit, this.keyworkd);
+      this.fetchData(page, this.limit, this.keyword);
     },
     handleSizeChange(limit) {
       this.limit = limit;
-      this.fetchData(this.page, limit, this.keyworkd);
+      this.fetchData(this.page, limit, this.keyword);
     },
   },
 };

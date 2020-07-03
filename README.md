@@ -13,7 +13,8 @@ npm run electron:build:windows
 ```
 
 # 下载软件
-[vue-electron-wallpaper@1.1.2.exe](https://cdn.xiongyechang.com/vue-electron-wallpaper@1.1.2.exe)
+
+[vue-electron-wallpaper@1.1.4.exe](https://cdn.xiongyechang.com/vue-electron-wallpaper@1.1.4.exe)
 
 # 预览
 

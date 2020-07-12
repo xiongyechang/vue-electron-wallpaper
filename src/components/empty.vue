@@ -9,13 +9,13 @@
 
 <style lang="scss" scoped>
 .empty {
-  height: calc(100% - 36px);
-  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
   .box {
-    position: absolute;
-    top: calc(50% - 36px);
-    left: 50%;
-    transform: translate(-50%, -50%);
     .text {
       text-align: center;
       color: lightgray;

@@ -1,5 +1,7 @@
 import axios from "axios";
-let { baseURL } = require("../config/config");
+let {
+  baseURL
+} = require("../config/config");
 
 baseURL = `${baseURL}api/`;
 

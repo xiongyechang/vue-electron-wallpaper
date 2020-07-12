@@ -1,11 +1,13 @@
 <template>
   <div class="layout">
-    <control-bar :selectedImageList="selectedImageList" v-on="$listeners"></control-bar>
+    <control-bar
+      :selectedImageList="selectedImageList"
+      v-on="$listeners"
+    ></control-bar>
 
     <template v-if="total">
-      <div class="body">
+      <div ref="body" class="body">
         <div class="card" v-for="(item, index) of data" :key="index">
-          
           <div
             class="card-top"
             :style="{
@@ -16,16 +18,17 @@
               <span class="text">选择</span>
             </el-checkbox>
           </div>
-          
-          <Preview :data="item" :index="index"></Preview>
-          
+
+          <Preview
+            :data="item"
+            :index="index"
+            @view-info="viewImageInfo"
+          ></Preview>
+
           <div class="card-bottom card-text">
-            {{item.name}}
+            {{ item.name }}
           </div>
-
-          <div style="clear:both;"></div>           
         </div>
-
       </div>
 
       <div class="footer">
@@ -45,6 +48,21 @@
       <empty></empty>
     </template>
 
+    <el-drawer
+      :visible.sync="drawer"
+      v-if="drawer"
+      direction="rtl"
+      @close="
+        () => {
+          this.drawer = false;
+        }
+      "
+    >
+      <template v-slot:title>
+        <h3>图片信息</h3>
+      </template>
+      <image-info :ImageInfo="imageInfo"></image-info>
+    </el-drawer>
   </div>
 </template>
 
@@ -52,6 +70,7 @@
 import ControlBar from "@/components/controlbar.vue";
 import Preview from "@/components/preview.vue";
 import Empty from "@/components/empty.vue";
+import ImageInfo from "@/components/image-info.vue";
 export default {
   name: "layout",
   props: {
@@ -67,6 +86,7 @@ export default {
     ControlBar,
     Preview,
     Empty,
+    ImageInfo,
   },
   computed: {
     selectedImageList: {
@@ -75,12 +95,22 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      drawer: false,
+      imageInfo: null,
+    };
+  },
   methods: {
     formatPath(uri) {
       return path.basename(uri).replace(/\.\w+/, "");
     },
     switchTab(label) {
       this.$emit("tab-change", label);
+    },
+    viewImageInfo(item) {
+      this.drawer = true;
+      this.imageInfo = item;
     },
   },
 };
@@ -91,27 +121,31 @@ export default {
   position: relative;
   box-sizing: border-box;
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 
   .body {
+    width: 100%;
     height: calc(100% - 76px);
     overflow-y: auto;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
   }
   .card {
-    float: left;
     position: relative;
-    width: 24%;
+    width: 32%;
     min-width: 312px;
-    margin: 0 0 10px 5px;
-    height: 200px;
+    margin: 0 5px 10px 5px;
+    min-height: 200px;
+    max-height: 240px;
     background-color: #ffffff;
     overflow: hidden;
-    &:hover  {
+    &:hover {
       .card-top {
         top: 0 !important;
       }
-     
     }
     &-top {
       transition: all 0.3s ease-in-out;
@@ -125,7 +159,7 @@ export default {
       background: rgba(255, 255, 255, 0.5);
       z-index: 2000;
     }
-    &-bottom{
+    &-bottom {
       transition: all 0.3s ease-in-out;
       position: absolute;
       bottom: 0 !important;
@@ -136,10 +170,9 @@ export default {
       padding: 0 16px;
       background: rgba(0, 0, 0, 0.5);
     }
-    .card-text{
+    .card-text {
       font-size: 14px;
       color: #ffffff;
-
     }
   }
   .text {

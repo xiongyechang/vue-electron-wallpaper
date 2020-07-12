@@ -11,48 +11,26 @@
           @click.native="setSavePath"
         ></el-input>
       </el-form-item>
-      <!-- <el-form-item label="检查更新: " label-width="80px">
-        <el-button @click="update">更新</el-button>
-      </el-form-item> -->
     </el-form>
-    <!-- <update-dialog :visible.sync="visible"></update-dialog> -->
   </div>
 </template>
 
 <script>
-// import UpdateDialog from "@/components/update-dialog.vue";
 import { remote, ipcRenderer } from "electron";
-// import {
-//   checkForUpdate,
-//   isUpdate,
-//   downloadProgress,
-//   cancelUpdate,
-// } from "@/models/update";
+import Mixin from "@/mixins";
 export default {
   name: "setting",
   data() {
     return {
       theme: "",
       path: "",
-      // visible: false,
     };
   },
 
   mounted() {
-    const theme = localStorage.getItem("theme");
-    if (theme) {
-      document.documentElement.style.setProperty("--primary-color", theme);
-      this.theme = theme;
-    }
-
-    this.$watch("theme", function(n) {
-      localStorage.setItem("theme", n);
-      document.documentElement.style.setProperty("--primary-color", n);
-    });
-
     this.path = remote.app.getPath("downloads");
   },
-
+  mixins: [Mixin],
   methods: {
     setSavePath() {
       const res = remote.dialog.showOpenDialogSync({
@@ -64,13 +42,6 @@ export default {
         this.path = res[0];
       }
     },
-    // update() {
-    //   ipcRenderer.send(checkForUpdate);
-
-    //   ipcRenderer.on(isUpdate, (event) => {
-    //     this.visible = true;
-    //   });
-    // },
   },
 };
 </script>

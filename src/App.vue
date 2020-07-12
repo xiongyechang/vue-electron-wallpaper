@@ -24,6 +24,7 @@ import { debounce } from "lodash";
 import { checkForUpdate, isUpdate } from "@/models/update";
 import path from "path";
 import { remote, shell } from "electron";
+import Mixin from "@/mixins";
 export default {
   name: "App",
   components: { TopBar, NavMenu, UpdateDialog },
@@ -42,20 +43,6 @@ export default {
       this.visible = true;
     });
 
-    // ipcRenderer.on("message", (event, { msg, code }) => {});
-
-    // ipcRenderer.on("isUpdateNow", () => {
-    //   ipcRenderer.send("isUpdateNow");
-    // });
-
-    // ipcRenderer.on(
-    //   "downloading",
-    //   debounce((event, { receive, total }) => {
-    //     console.log(receive, total);
-    //   }),
-    //   1000
-    // );
-
     ipcRenderer.on(
       "download-done",
       debounce((event, { name, receive, total }) => {
@@ -72,13 +59,7 @@ export default {
       1000
     );
   },
-
-  mounted() {
-    const theme = localStorage.getItem("theme");
-    if (theme) {
-      document.documentElement.style.setProperty("--primary-color", theme);
-    }
-  },
+  mixins: [Mixin],
 };
 </script>
 
@@ -93,10 +74,8 @@ export default {
 html,
 body,
 #app {
-  height: 100%;
-  min-width: 1200px;
-  min-height: 768px;
-  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -107,6 +86,7 @@ body,
 
 .main {
   display: flex;
+  width: 100%;
   height: calc(100% - 33px);
   .nav {
     height: 100%;

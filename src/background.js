@@ -1,6 +1,10 @@
 "use strict";
 
-import { app, protocol, BrowserWindow } from "electron";
+import {
+  app,
+  protocol,
+  BrowserWindow
+} from "electron";
 import {
   createProtocol,
   /* installVueDevtools */
@@ -14,18 +18,24 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 let win;
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } },
-]);
+protocol.registerSchemesAsPrivileged([{
+  scheme: "app",
+  privileges: {
+    secure: true,
+    standard: true
+  }
+}, ]);
 
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1200,
-    height: 768,
+    width: 1216,
+    height: 600,
     title: "VueElectronWallpaper",
     frame: false,
     // transparent: true,
+    minWidth: 1216,
+    minHeight: 600,
     maximizable: true,
     minimizable: true,
     // resizable: false,

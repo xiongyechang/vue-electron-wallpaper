@@ -1,6 +1,6 @@
 {
   "name": "vue-electron-wallpaper",
-  "version": "1.5.9",
+  "version": "1.6.2",
   "private": true,
   "description": "electron vue 壁纸软件",
   "author": "熊业昌",
@@ -19,7 +19,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
-    "dayjs": "^1.8.27",
+    "dayjs": "^1.8.29",
     "electron-drag": "^1.2.2",
     "element-ui": "^2.13.2",
     "fs-extra": "^9.0.1",
@@ -39,6 +39,7 @@
     "@vue/cli-service": "^4.4.4",
     "babel-eslint": "^10.0.3",
     "babel-polyfill": "^6.26.0",
+    "chromedriver": "^83.0.1",
     "electron": "^8.2.0",
     "electron-updater": "^4.3.1",
     "eslint": "^6.7.2",
@@ -66,5 +67,6 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "__npminstall_done": false
 }

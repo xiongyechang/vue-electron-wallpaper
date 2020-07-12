@@ -27,14 +27,3 @@ export function isURL(url) {
     )
   );
 }
-
-export function formatTime(date, format) {
-  const map = {
-    mm: date.getMonth() + 1,
-    dd: date.getDate(),
-    yyyy: date.getFullYear(),
-    yy: date.getFullYear().toString(),
-  };
-
-  return format.replace(/mm|dd|(yyyy|yy)/gi, (mached) => map[mached]);
-}

@@ -20,6 +20,8 @@ mainWindow.webContents.session.on(
               return;
             }
 
+            mainWindow.setProgressBar(item.getReceivedBytes() / item.getTotalBytes());
+
             mainWindow.webContents.send("downloading", {
               name: item.getFilename(),
               receive: item.getReceivedBytes(),
@@ -34,8 +36,10 @@ mainWindow.webContents.session.on(
     });
 
     item.once("done", function(error, state) {
-      console.log(state);
       if (state === "completed") {
+
+        mainWindow.setProgressBar(0); 
+
         if (process.platform === "darwin") {
           app.dock.downloadFinished(item.getSavePath());
         }
@@ -57,6 +61,5 @@ mainWindow.webContents.session.on(
 );
 
 ipcMain.on("download", function(event, uri) {
-  console.log(uri);
   mainWindow.webContents.downloadURL(uri);
 });

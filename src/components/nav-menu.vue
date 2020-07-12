@@ -14,7 +14,7 @@
       <li
         class="list-item"
         :class="{
-          RouteActive: activeRoute === index,
+          RouteActive: activeRouter === index,
         }"
         @click="swichRouter(item, index)"
       >
@@ -76,13 +76,33 @@ export default {
       NavMenu: Menu,
       MenuWidth: NavMenuWidth.expand,
       NavMenuIconStatus: NavMenuIcon.fold,
-      activeRoute: 0,
       drawer: false,
+      activeRouter: 0,
     };
   },
   components: { Setting },
 
-  mounted() {},
+  watch: {
+    "$route.fullPath": function(v, o){
+      let { category } = this.$route.query;
+      category = decodeURIComponent(category);
+      if(category){
+        let index = Menu.findIndex(route => route.category === decodeURIComponent(category));
+        if(index !== -1){
+          this.activeRouter = index;
+        }
+      }
+    }
+  },
+
+  created(){
+    this.$router.replace({
+      name: "all",
+      query: {
+        category: "全部"
+      }
+    })
+  },
 
   methods: {
     expand() {
@@ -96,7 +116,6 @@ export default {
     },
 
     swichRouter(ele, index) {
-      this.activeRoute = index;
 
       if (this.$route.path === ele.path) {
         return;
@@ -104,7 +123,7 @@ export default {
 
       this.$router.push({
         path: ele.path,
-        query: { keyword: ele.keyword },
+        query: { category: ele.category },
       });
     },
 

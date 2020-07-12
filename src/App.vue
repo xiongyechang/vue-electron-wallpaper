@@ -147,7 +147,7 @@ button {
   ul {
     position: fixed;
     background: #ffffff;
-    width: 150px;
+    width: 200px;
     padding: 10px 0;
     font-size: 14px;
   }

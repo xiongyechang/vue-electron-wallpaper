@@ -10,26 +10,7 @@ import fs from "fs";
 import { SET_QINIU_TOKEN, SET_QINIU_DOMAIN } from "@/store/mutation_types";
 
 export default {
-  data() {
-    return {};
-  },
-  created() {
-    this.getQiniuToken();
-    this.getQiniuDomain();
-  },
-  mounted() {},
-  computed: {
-    ...mapGetters({
-      qiniuToken: "qiniuToken",
-      qiniuDomain: "qiniuDomain",
-    }),
-  },
   methods: {
-    ...mapActions({
-      getQiniuToken: "getQiniuToken",
-      getQiniuDomain: "getQiniuDomain",
-    }),
-
     async requestImage(uri) {
       return new Promise((resolve, reject) => {
         let request = null; // 请求
@@ -67,48 +48,6 @@ export default {
             req.on("error", function(e) {
               reject(e);
             });
-          }
-        );
-      });
-    },
-
-    uploadToQiniu(file) {
-      return new Promise((resolve, reject) => {
-        let key = randomstring.generate(8) + "-" + file.name;
-
-        console.log(qiniu);
-
-        let config = {
-          useCdnDomain: true,
-          region: qiniu.region.z0,
-        };
-
-        var putExtra = {
-          fname: file.name,
-          params: {},
-          mimeType: [] || null,
-        };
-        var observable = qiniu.upload(
-          file,
-          key,
-          this.qiniuToken,
-          putExtra,
-          config
-        );
-
-        let mainWindow = remote.BrowserWindow.getFocusedWindow();
-
-        // var subscription = observable.subscribe(observer) // 上传开始
-        observable.subscribe(
-          (res) => {
-            // console.log("上传进度:", res);
-            mainWindow.webContents.send(uploadProgress, res);
-          },
-          (e) => {
-            reject(e);
-          },
-          (res) => {
-            resolve(this.qiniuDomain + "/" + res.key);
           }
         );
       });

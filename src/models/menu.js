@@ -1,6 +1,6 @@
 const router = [
   {
-    path: "/",
+    path: "/all",
     name: "all",
     icon: require("@/assets/img/all.png"),
     description: "全部",
@@ -12,14 +12,6 @@ const router = [
     name: "landscape",
     icon: require("@/assets/img/landscape.png"),
     description: "风景",
-    component: () =>
-      import(/* webpackChunkName: 'index.vue' */ "@/views/index.vue"),
-  },
-  {
-    path: "/city",
-    name: "city",
-    icon: require("@/assets/img/city.png"),
-    description: "城市",
     component: () =>
       import(/* webpackChunkName: 'index.vue' */ "@/views/index.vue"),
   },
@@ -40,26 +32,10 @@ const router = [
       import(/* webpackChunkName: 'index.vue' */ "@/views/index.vue"),
   },
   {
-    path: "/universe",
-    name: "universe",
-    icon: require("@/assets/img/universe.png"),
-    description: "宇宙",
-    component: () =>
-      import(/* webpackChunkName: 'index.vue' */ "@/views/index.vue"),
-  },
-  {
     path: "/cartoon",
     name: "cartoon",
     icon: require("@/assets/img/cartoon.png"),
-    description: "卡通",
-    component: () =>
-      import(/* webpackChunkName: 'index.vue' */ "@/views/index.vue"),
-  },
-  {
-    path: "/movie",
-    name: "movie",
-    icon: require("@/assets/img/movie.png"),
-    description: "影视",
+    description: "动漫",
     component: () =>
       import(/* webpackChunkName: 'index.vue' */ "@/views/index.vue"),
   },
@@ -74,10 +50,12 @@ const router = [
 ];
 
 router.forEach((r) => {
-  r.props = (route) => ({ keyword: route.query.keyword });
-  if (r.description !== "全部") {
-    r.keyword = r.description;
-  }
+  
+  r.props = (route) => ({
+    category: encodeURIComponent(route.query.category)
+  });
+
+  r.category = r.description;
 });
 
 export default router;

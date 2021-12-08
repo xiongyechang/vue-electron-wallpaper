@@ -45,6 +45,7 @@ jobs:
 
       - name: Build-Init
         run: |
+          npm install yarn
           yarn
           npm run build:linux
           tar -zcvf vue-elelctron-wallpaper-release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc wallpaper tempImages src public docs dist_electron

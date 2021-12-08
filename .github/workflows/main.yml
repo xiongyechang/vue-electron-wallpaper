@@ -33,7 +33,9 @@ jobs:
         run: echo Build Start!
 
         run: npm install # 安装第三方包
+
         run: npm run build:linux # 打包
+        
         run: tar -zcvf vue-elelctron-wallpaper-release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc wallpaper tempImages src public docs dist_electron # 把源码等文件，打包压缩为release.tgz
 
         run: echo Build End!

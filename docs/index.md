@@ -3,7 +3,7 @@
 1. vue create demo
 
 2. npm install --save chromedriver
-3. vue add vue-electron
+3. vue add electron-builder
 
 # 最大化
 

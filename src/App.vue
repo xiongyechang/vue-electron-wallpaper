@@ -1,66 +1,31 @@
 <template>
-  <div id="app">
-    <top-bar></top-bar>
-    <main class="main">
-      <nav class="nav">
-        <nav-menu></nav-menu>
-      </nav>
-      <section class="section">
-        <keep-alive>
-          <router-view :key="$route.fullPath" />
-        </keep-alive>
-      </section>
-    </main>
-    <update-dialog :visible.sync="visible"></update-dialog>
-  </div>
+  <top-bar></top-bar>
+  <main>
+    <transition 
+      tag="div"
+      enter-active-class="animate__animated animate__fadeInRightBig"
+      leave-active-class="animate__animated animate__fadeOutLeftBig"
+    >
+      <router-view :key="route.fullPath" />
+    </transition>
+  </main>
+	<bottom-bar></bottom-bar>
 </template>
 
-<script>
+<script lang="ts" setup>
+import { onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import TopBar from "@/components/topbar.vue";
-import NavMenu from "@/components/nav-menu.vue";
-import UpdateDialog from "@/components/update-dialog";
-import { ipcRenderer } from "electron";
-import { debounce } from "lodash";
-import { checkForUpdate, isUpdate } from "@/models/update";
-import path from "path";
-import { remote, shell } from "electron";
-import Mixin from "@/mixins";
-export default {
-  name: "App",
-  components: { TopBar, NavMenu, UpdateDialog },
-  data() {
-    return {
-      visible: false,
-    };
-  },
+import BottomBar from "@/components/bottombar.vue";
 
-  created() {
-    // 检查是否有更新
-    ipcRenderer.send(checkForUpdate);
+const route = useRoute();
 
-    // 有更新
-    ipcRenderer.on(isUpdate, (event) => {
-      this.visible = true;
-    });
-
-    ipcRenderer.on(
-      "download-done",
-      debounce((event, { name, receive, total }) => {
-        const imagePath = path.join(remote.app.getPath("downloads"), name);
-        const notification = new Notification("图片下载通知", {
-          body: "图片下载成功",
-          icon: imagePath,
-        });
-
-        notification.addEventListener("click", function() {
-          shell.openItem(imagePath);
-        });
-      }),
-      1000
-    );
-  },
-  mixins: [Mixin],
-};
+onMounted(() => {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    document.documentElement.style.setProperty("--primary-color", savedTheme);
+  }
+});
 </script>
 
 <style lang="scss">
@@ -76,8 +41,8 @@ body,
 #app {
   height: 100vh;
   width: 100vw;
-}
-#app {
+  display: grid;
+  grid-auto-rows: 33px calc(100% - 66px) 33px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   color: #2c3e50;
   font-size: 16px;
@@ -87,7 +52,6 @@ body,
 .main {
   display: flex;
   width: 100%;
-  height: calc(100% - 33px);
   .nav {
     height: 100%;
     background: #edeeef;
@@ -100,6 +64,15 @@ body,
       text-align: right;
       padding: 10px 40px 10px 10px;
     }
+  }
+}
+
+
+#username,#password{
+  &.swal2-input{
+    height: 2rem;
+    padding: 0;
+    margin: 10px 0;
   }
 }
 
@@ -116,35 +89,13 @@ button {
     clear: both;
   }
 }
-
-.contextmenu {
-  position: fixed;
+.fixed-fullscreen{
+  position: fixed !important;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgba(255, 255, 255, 0);
-  ul {
-    position: fixed;
-    background: #ffffff;
-    width: 200px;
-    padding: 10px 0;
-    font-size: 14px;
-  }
-  li {
-    list-style: none;
-    padding: 5px 10px;
-    i {
-      margin-right: 10px;
-    }
-    &:hover {
-      background-color: var(--primary-color);
-      color: #ffffff;
-      cursor: pointer;
-    }
-  }
 }
-
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
   background-color: var(--primary-color) !important;

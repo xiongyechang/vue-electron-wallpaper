@@ -1,79 +1,88 @@
 <script>
-import { WallpaperService } from "@/services";
+import { WallpaperService } from '@/services';
 export default {
   name: "base-component",
   props: {
-    category: String, // 分类
+    type: String // 分类
   },
   data() {
     return {
       data: [],
-      count: 0,
-      page: 1,
+      total: 0,
+      pageNo: 1,
       limit: 24,
-      keyword: "", // 搜索关键字
+      keyword: "" // 搜索关键字
     };
   },
   created() {
-    this.fetchData(this.page, this.limit, this.category);
+    this.fetchData(this.pageNo, this.limit, this.type);
   },
   methods: {
-    async fetchData(page, limit, category) {
-      const { data, status, msg } = await WallpaperService.list(page, limit, category);
-      if(status === 0){
-        const { rows, count } = data;
-        this.data = (rows || []).map((item) => ({
-          ...item,
-          checked: false,
-        }));
-
-        this.count = count;
+    async fetchData(pageNo, limit, type) {
+      this.scrollToTop();
+      const { success, data, message } = await WallpaperService.list(pageNo, limit, type);
+      if (success) {
+          const { rows, total } = data;
+          this.data = (rows || []).map(item => ({
+            ...item,
+            checked: false
+          }));
+          this.total = total;
+      } else {
+        console.log(message);
       }
     },
-    switchRequest(keyword){
-      if(keyword){
-        this.searchRequest(keyword, this.page, this.limit);
-      }else{
-        this.fetchData(this.page, this.limit, this.category);
+    switchRequest(keyword) {
+      if (keyword) {
+        this.searchRequest(keyword, this.pageNo, this.limit);
+      } else {
+        this.fetchData(this.pageNo, this.limit, this.type);
       }
     },
-    handleCurrentChange(page) {
-      this.page = page;
-      this.switchRequest(this.keyword, this.page, this.limit);
+    handleCurrentChange(pageNo) {
+      this.pageNo = pageNo;
+      this.switchRequest(this.keyword, this.pageNo, this.limit);
     },
     handleSizeChange(limit) {
       this.limit = limit;
-      this.switchRequest(this.keyword, );
+      this.switchRequest(this.keyword);
     },
-    async searchRequest(keyword, page , limit){
-      const { data, msg, status } = await WallpaperService.search({
+    async searchRequest(keyword, pageNo, limit) {
+      this.scrollToTop();
+      const { data, success } = await WallpaperService.search({
         keyword: encodeURIComponent(keyword),
-        category: this.category,
-        page,
+        type: this.type,
+        pageNo,
         limit
-       });
-
-       if(status === 0){
-        const { rows, count } = data;
-         this.data = (rows || []).map((item) => ({
+      });
+      if (success) {
+        const { rows, total } = data;
+        this.data = (rows || []).map(item => ({
           ...item,
-          checked: false,
+          checked: false
         }));
-
-        this.count = count;
-      }  
+        this.total = total;
+      }
     },
     // 输入框用keyword
     searchend(keyword) {
-      this.page = 1;
-      if(keyword){
+      this.pageNo = 1;
+      if (keyword) {
         this.keyword = keyword;
-        this.searchRequest(this.keyword, this.page, this.limit);
-      }else{
+        this.searchRequest(this.keyword, this.pageNo, this.limit);
+      } else {
         this.keyword = "";
-        this.fetchData(this.page, this.limit, this.category);
+        this.fetchData(this.pageNo, this.limit, this.type);
       }
+    },
+    // 回到顶部
+    scrollToTop() {
+      const body = document.querySelector(".layout>.body");
+      if (body) {
+        body.scrollTo(0, 0);
+      }
+      // if(body.scrollTop){}
     }
-  },
+  }
 };
 </script>

@@ -1,16 +1,7 @@
 <template>
   <div class="control-bar">
     <el-row :gutter="10">
-      <el-col :span="4">
-        <el-button
-          type="primary"
-          @click="batchDownload"
-          icon="el-icon-download"
-          :disabled="!disabledButton"
-          >批量下载{{ computedSelectedImageList }}</el-button
-        >
-      </el-col>
-      <el-col :span="12">
+      <el-col :span="16">
         <marquee
           onmouseleave="this.start()"
           onmouseover="this.stop()"
@@ -18,8 +9,9 @@
           behavior="scroll"
         >
           1.右键点击图片可以 [下载] [预览] [设置为壁纸] 等操作. 2.预览图片点击
-          [ESC] 按钮可以退出预览. 3. [高清图片] 尚未爬取成功(仅[美女图片]前 9
-          页存在高清图片), 正在努力解决中...
+          [ESC] 按钮可以退出预览. 3.
+          右键点击图片,点击图片详情,如果有内容说明存在高清图片 4. [高清图片]
+          尚未完全爬取成功, 正在努力解决中...
         </marquee>
       </el-col>
       <el-col :span="8" style="padding-right: 16px">
@@ -27,6 +19,8 @@
           placeholder="请输入搜索内容..."
           v-model="keyword"
           @input="input"
+          clearable
+          size="small"
           suffix-icon="el-icon-search"
         >
         </el-input>
@@ -35,57 +29,29 @@
   </div>
 </template>
 
-<script>
-import { remote } from "electron";
-import { WallpaperService, WallpaperTypeService } from "@/services";
-import { debounce } from "lodash";
-import Mixin from "@/mixins";
-export default {
+<script lang="ts">
+import { ref, defineComponent } from 'vue'
+import { debounce } from "lodash"
+export default defineComponent({
   name: "controlbar",
-  props: {
-    selectedImageList: {
-      type: Array,
-      default: () => [],
-    },
-  },
-  data() {
-    return {
-      keyword: "",
-    };
-  },
-  computed: {
-    computedSelectedImageList() {
-      return this.selectedImageList.length
-        ? `  (${this.selectedImageList.length}张)`
-        : "";
-    },
-    disabledButton() {
-      return !!this.selectedImageList.length;
-    },
-  },
-  mixins: [Mixin],
-  methods: {
-    input: debounce(function() {
-      this.$emit("searchend", this.keyword);
-    }, 1000),
+  setup(props, { emit }) {
+    const keyword = ref(``);
 
-    batchDownload() {
-      if (!this.selectedImageList.length) {
-        this.$notify({
-          title: "提示",
-          message: "请选择图片",
-          duration: 3000,
-          type: "warning",
-        });
-        return;
-      }
-      const mainWindow = remote.BrowserWindow.getFocusedWindow();
-      for (let uri of this.selectedImageList) {
-        let e = mainWindow.webContents.downloadURL(uri);
-      }
-    },
-  },
-};
+    const input = debounce(function() {
+      emit('searchend', keyword.value);
+    }, 100)
+
+    const clear = () => {
+      keyword.value = ``;
+    }
+
+    return {
+      keyword,
+      input,
+      clear,
+    }
+  }
+});
 </script>
 
 <style scoped>

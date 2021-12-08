@@ -10,26 +10,22 @@
         <i style="font-size: 16px;" :class="NavMenuIconStatus"></i>
       </span>
     </div>
-    <ul class="list-panel" v-for="(item, index) of NavMenu" :key="index">
+    <ul class="list-panel">
       <li
         class="list-item"
+        v-for="(item, index) of NavMenu" :key="index"
         :class="{
           RouteActive: activeRouter === index,
         }"
-        @click="swichRouter(item, index)"
+        @click="switchRouter(item, index)"
       >
+        <i :class="item.icon"></i>
+        <span class="list-item__text">{{ item.title }}</span>
         <img
-          :src="item.icon"
-          width="16"
-          height="auto"
-          :title="item.description"
-        />
-        <span class="list-item__text">{{ item.description }}</span>
-        <img
-          v-show="['美女', '风景'].includes(item.description)"
+          v-show="['美女', '跑车', '游戏'].includes(item.title)"
           style="margin-left: 110px;"
           :src="require('@/assets/img/hot.png')"
-          width="16"
+          width="20"
           height="auto"
         />
       </li>
@@ -38,25 +34,25 @@
       <i class="el-icon-setting"></i>
       <span>设置</span>
     </div>
+    <!-- 设置窗口 -->
     <el-drawer
-      :visible="drawer"
+      v-model="drawer"
       direction="rtl"
-      @close="
-        () => {
-          this.drawer = false;
-        }
-      "
+      :append-to-body="true"
+      @close="drawer=false"
     >
       <template v-slot:title>
         <h3>设置</h3>
       </template>
-      <setting></setting>
+      <setting @setted="setted" />
     </el-drawer>
   </menu>
 </template>
 
-<script>
-import Menu from "@/models/menu";
+<script lang="ts">
+import { WallpaperTypeService } from '@/services';
+import { defineComponent, ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import Setting from "./setting.vue";
 
 const NavMenuWidth = {
@@ -69,69 +65,114 @@ const NavMenuIcon = {
   unfold: "el-icon-s-unfold",
 };
 
-export default {
+export default defineComponent({
   name: "nav-menu",
-  data() {
-    return {
-      NavMenu: Menu,
-      MenuWidth: NavMenuWidth.expand,
-      NavMenuIconStatus: NavMenuIcon.fold,
-      drawer: false,
-      activeRouter: 0,
-    };
-  },
   components: { Setting },
+  setup(props, { emit }) {
+    const NavMenu = ref([]);
+    const MenuWidth = ref(NavMenuWidth.expand);
+    const NavMenuIconStatus = ref(NavMenuIcon.fold);
+    const drawer = ref(false);
+    const activeRouter = ref(0);
+    // const router = useRouter();
+    const route = useRoute();
 
-  watch: {
-    "$route.fullPath": function(v, o){
-      let { category } = this.$route.query;
-      category = decodeURIComponent(category);
-      if(category){
-        let index = Menu.findIndex(route => route.category === decodeURIComponent(category));
-        if(index !== -1){
-          this.activeRouter = index;
-        }
+    onMounted(() => {
+
+      WallpaperTypeService
+        .list()
+          .then((response:any) => {
+            const { data, success } = response;
+            if (success) {
+              const { rows = [] } = data;
+              NavMenu.value = [{
+                count: 0,
+                createdAt: new Date().toString(),
+                icon: "iconfont icon-all",
+                name: "all",
+                path: "/all",
+                title: "全部",
+                updatedAt: new Date().toString(),
+              }].concat(rows);
+            }
+          });
+    })
+
+    function expand() {
+      if (MenuWidth.value === NavMenuWidth.collapse) {
+        MenuWidth.value = NavMenuWidth.expand;
+        NavMenuIconStatus.value = NavMenuIcon.fold;
+      } else {
+        MenuWidth.value = NavMenuWidth.collapse;
+        NavMenuIconStatus.value = NavMenuIcon.unfold;
       }
     }
-  },
 
-  created(){
-    this.$router.replace({
-      name: "all",
-      query: {
-        category: "全部"
-      }
-    })
-  },
+    function switchRouter(ele, index) {
 
-  methods: {
-    expand() {
-      if (this.MenuWidth === NavMenuWidth.collapse) {
-        this.MenuWidth = NavMenuWidth.expand;
-        this.NavMenuIconStatus = NavMenuIcon.fold;
-      } else {
-        this.MenuWidth = NavMenuWidth.collapse;
-        this.NavMenuIconStatus = NavMenuIcon.unfold;
-      }
-    },
-
-    swichRouter(ele, index) {
-
-      if (this.$route.path === ele.path) {
+      if (route.path === ele.path) {
         return;
       }
 
-      this.$router.push({
-        path: ele.path,
-        query: { category: ele.category },
-      });
-    },
+      activeRouter.value = index;
 
-    openDrawer() {
-      this.drawer = true;
-    },
-  },
-};
+      emit('menu-item-change', ele);
+    }
+
+    function openDrawer() {
+      drawer.value = true;
+    }
+
+    
+    function setted () {
+      drawer.value = false;
+    }
+
+
+
+    return {
+      NavMenu,
+      MenuWidth,
+      NavMenuIconStatus,
+      drawer,
+      activeRouter,
+      expand,
+      switchRouter,
+      openDrawer,
+      setted,
+    }
+  }
+
+  // watch: {
+  //   "$route.fullPath": function(newPath, oldPath){
+  //     if (newPath !== oldPath) {
+  //       const index = this.NavMenu.findIndex(route => route.path === newPath.split('?')[0]);
+  //       if(index !== -1){
+  //         this.activeRouter = index;
+  //       }
+  //     }
+  //   }
+  // },
+
+  // mounted() {
+  //   this.NavMenu = this.$router.options.routes;
+
+  //   setTimeout(() => {
+  //     const index = this.NavMenu.findIndex(el => {
+  //       console.log(el.path, location.pathname);
+  //       return el.path === location.pathname
+  //     });
+
+  //     console.log(index);
+
+  //     if (index === -1) {
+  //       this.activeRouter = 0;
+  //     } else {
+  //       this.activeRouter = index;
+  //     }
+  //   }, 30)
+  // },
+});
 </script>
 
 <style lang="scss" scoped>

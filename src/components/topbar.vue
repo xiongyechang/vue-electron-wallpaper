@@ -1,16 +1,22 @@
 <template>
   <div id="topbar" ref="topbar">
-    <div>
-      <span>VueElectronWallpaper{{ app.getVersion() }}</span>
+    <div class="topbar-logo">
+        <div v-show="canBack" @click="back" class="back-icon">
+          <span>
+            <i class="el-icon-arrow-left"></i>
+          </span>
+        </div>
+        <img :style="{ marginLeft: '10px' }" src="@/assets/favicon.png" width="24" height="24">
+        <span>{{ app.getName() }} {{app.getVersion()}}</span>
     </div>
     <div>
-      <span @click.stop="minimize">
+      <span class="opt-minimize" @click.stop="minimize">
         <i class="el-icon-minus"></i>
       </span>
-      <span @click.stop="maximize">
+      <span class="opt-maximize" @click.stop="maximize">
         <i :class="fullscreen"></i>
       </span>
-      <span @click.stop="close">
+      <span class="opt-close" @click.stop="close">
         <i class="el-icon-close"></i>
       </span>
     </div>
@@ -18,76 +24,90 @@
 </template>
 
 <script>
-import { remote } from "electron";
 
-const WindowSize = {
-  maximize: "maximize",
-  minimize: "minimize",
-  normal: "normal",
-};
-
-const WindowSizeIcon = {
-  max: "el-icon-full-screen",
-  normal: "el-icon-copy-document",
-};
+import { ref, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from "vue-router";
+import { app, getCurrentWindow } from '@electron/remote';
+import { WindowSize, WindowSizeIcon } from '../constants/constants';
 
 export default {
   name: "topbar",
-  data() {
-    return {
-      currWindow: null,
-      app: remote.app,
-      windowSize: WindowSize.normal,
-    };
-  },
-  mounted() {
-    this.currWindow = remote.getCurrentWindow(); // 当前窗口
+  setup() {
 
-    document.addEventListener("visibilitychange", () => {
-      var isHidden = document.hidden;
-      if (isHidden) {
-        if (this.currWindow.isMinimized()) {
-          this.windowSize = WindowSize.minimize;
+    let currWindow = null;
+    let windowSize = ref(WindowSize.normal);
+
+    const version = app.getVersion();
+
+    const router = useRouter();
+
+    const route = useRoute();
+
+    onMounted(() => {
+
+      currWindow = getCurrentWindow(); // 当前窗口
+
+      document.addEventListener("visibilitychange", () => {
+        var isHidden = document.hidden;
+        if (isHidden) {
+          if (currWindow.isMinimized()) {
+            windowSize.value = WindowSize.minimize;
+          } else {
+            windowSize.value = WindowSize.normal;
+          }
         } else {
-          this.windowSize = WindowSize.normal;
+          if (currWindow.isMaximized()) {
+            windowSize.value = WindowSize.maximize;
+          } else {
+            windowSize.value = WindowSize.normal;
+          }
         }
-      } else {
-        if (this.currWindow.isMaximized()) {
-          this.windowSize = WindowSize.maximize;
-        } else {
-          this.windowSize = WindowSize.normal;
-        }
-      }
+      });
     });
-  },
-  computed: {
-    fullscreen: function() {
-      return this.windowSize === WindowSize.normal
-        ? WindowSizeIcon.max
-        : WindowSizeIcon.normal;
-    },
-  },
-  methods: {
-    maximize() {
-      if (this.currWindow.isMaximized()) {
-        this.currWindow.unmaximize();
-        this.windowSize = WindowSize.normal;
+
+    const back = () => {
+      router.back();
+    }
+
+    // 计算属性
+    const fullscreen = computed(() => windowSize.value === WindowSize.normal ? WindowSizeIcon.max : WindowSizeIcon.normal);
+
+    const canBack = computed(() => route.name !== 'home');
+
+    console.log('canBack', canBack.value, route);
+
+    const maximize = () => {
+      if (currWindow.isMaximized()) {
+        currWindow.unmaximize();
+        windowSize.value = WindowSize.normal;
       } else {
-        this.currWindow.maximize();
-        this.windowSize = WindowSize.maximize;
+        currWindow.maximize();
+        windowSize.value = WindowSize.maximize;
       }
-    },
-    // 最小化窗口
-    minimize() {
-      if (!this.currWindow.isMinimized()) {
-        this.currWindow.minimize();
-        this.windowSize = WindowSize.minimize;
+    }
+
+    const minimize = () => {
+      if (!currWindow.isMinimized()) {
+        currWindow.minimize();
+        windowSize.value = WindowSize.minimize;
       }
-    },
-    close() {
-      remote.app.quit();
-    },
-  },
+    }
+
+    const close = () => {
+      app.quit();
+    }
+
+    return {
+      app,
+      version,
+      canBack,
+      fullscreen,
+      back,
+      maximize,
+      minimize,
+      close,
+    }
+  }
 };
 </script>
 
@@ -99,18 +119,21 @@ export default {
   justify-content: space-between;
   align-items: center;
   -webkit-app-region: drag;
+  .topbar-logo {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      justify-content: flex-start;
+      .back-icon {
+        font-size: 24px;
+        cursor: pointer;
+        &:hover {
+          background-color: red;
+        }
+      }
+  }
   div {
     height: 33px;
-    &:first-child {
-      span:last-child:hover {
-        background: var(--primary-color);
-      }
-    }
-    &:last-child {
-      span:last-child:hover {
-        background: red;
-      }
-    }
     span {
       display: inline-block;
       min-width: 40px;
@@ -120,9 +143,15 @@ export default {
       text-align: center;
       color: #fff;
       -webkit-app-region: no-drag;
-      &:hover {
-        background: red;
-      }
+    }
+  }
+
+  .opt-minimize,
+  .opt-maximize,
+  .opt-close {
+    cursor: pointer;
+    &:hover {
+      background: red;
     }
   }
 }

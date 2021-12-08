@@ -1,23 +1,24 @@
 <template>
-  <Layout
+  <!-- <Layout
     :data="data"
-    :page.sync="page"
+    :page.sync="pageNo"
     :limit.sync="limit"
-    :total="count"
+    :total="total"
     @searchend="searchend"
     @current-change="handleCurrentChange"
     @size-change="handleSizeChange"
-  ></Layout>
+  ></Layout> -->
+  <div>111</div>
 </template>
 <script>
-import Layout from "@/components/layout.vue";
-import Base from "@/components/base.vue";
+// import Layout from "@/components/layout.vue";
+// import Base from "@/components/base.vue";
 
 export default {
   name: "index",
-  extends: Base,
+  // extends: Base,
   components: {
-    Layout
+    // Layout
   },
 };
 </script>

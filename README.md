@@ -1,29 +1,24 @@
-# 项目运行
+# vue-electron-wallpaper
 
+## Project setup
 ```
-npm run electron:serve
-```
-
-# 项目打包
-
-- 目前只支持 windows, linux 和 mac OS 后期再补上
-
-```
-npm run electron:build:windows
+npm install
 ```
 
-# 下载软件
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
-[vue-electron-wallpaper@1.1.3.exe](https://cdn.xiongyechang.com/vue-electron-wallpaper@1.1.3.exe)
+### Compiles and minifies for production
+```
+npm run build
+```
 
-# 预览
+### Lints and fixes files
+```
+npm run lint
+```
 
-![自动更新](https://cdn.xiongyechang.com/2020-07-01_11h15_25.png)
-![首页](https://cdn.xiongyechang.com/2020-07-01_11h15_36.png)
-![空页](https://cdn.xiongyechang.com/2020-07-01_11h15_44.png)
-![设置](https://cdn.xiongyechang.com/2020-07-01_11h15_50.png)
-![切换主题](https://cdn.xiongyechang.com/2020-07-01_11h15_57.png)
-![上传图片](https://cdn.xiongyechang.com/2020-07-01_11h16_29.png)
-![首页](https://cdn.xiongyechang.com/2020-07-01_11h17_17.png)
-![右键弹窗](https://cdn.xiongyechang.com/2020-07-01_12h46_49.png)
-![预览](https://cdn.xiongyechang.com/2020-07-01_12h47_13.png)
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

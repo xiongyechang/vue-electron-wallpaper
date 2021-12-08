@@ -1,7 +1,4 @@
-# This is a basic workflow to help you get started with Actions
-# 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
 name: vue-elelctron-wallpaper Actions
-
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
@@ -34,6 +31,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # 第一步：下载源码（CI/CD拉取代码到自己的本地）
       - name: Checkout
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
           uses: actions/checkout@master

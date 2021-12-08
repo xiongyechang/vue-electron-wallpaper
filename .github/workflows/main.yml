@@ -1,9 +1,10 @@
-name: vue-elelctron-wallpaper Actions
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
-  # tags: # 当我们提交代码为tag 是以'v'开头的时候才会触发自动部署到服务端 如 git push tag v0.1.0
-  #     - 'v*'
   push:
     branches: [ master ]
   pull_request:
@@ -11,16 +12,6 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-    # 在执行 workflow 时, 允许在 GitHub Actions 页面输入参数，
-    # 控制执行逻辑。我们可以将人工处理的逻辑，
-    # 在 GitHub Actions 参数化执行，适用于持续部署场景。
-    # inputs:
-    #   logLevel:
-    #     description: 'Log level'     
-    #     required: true
-    #     default: 'warning'
-    #   tags:
-    #     description: 'Test scenario tags'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -31,56 +22,15 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # 第一步：下载源码（CI/CD拉取代码到自己的本地）
-      - name: Checkout
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-          uses: actions/checkout@master
+      - uses: actions/checkout@v2
 
-      # 第二部：构建
       # Runs a single command using the runners shell
-      - name: Build
-          uses: actions/setup-node@master
-          run: npm install # 安装第三方包
-          run: npm run build:linux # 打包
-          run: tar -zcvf vue-elelctron-wallpaper-release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc wallpaper tempImages src public docs dist_electron # 把源码等文件，打包压缩为release.tgz
+      - name: Run a one-line script
+        run: echo Hello, world!
 
-      # 第三步：发布 release
       # Runs a set of commands using the runners shell
-      - name: RCreate Release # 创建Release，可以在仓库看到一个个版本
-        # id: create_release
-          uses: actions/create-release@master
-          env:
-            GITHUB_TOKEN: ${{ secrets.TOKEN }} # 之前GitHub添加的Token
-          with:
-            tag_name: ${{ github.ref }} # (tag)标签名称
-            release_name: Release ${{ github.ref }}
-            draft: false # 是否是草稿
-            prerelease: false # 是否是预发布
-
-      # 第四步：上传构建结果到 Release（把打包的tgz上传到Release）
-      - name: Upload Release Asset
-        # id: upload-release-asset
-          uses: actions/upload-release-asset@master
-          env:
-            GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }} # 上传地址，通过创建Release获取到的
-            asset_path: ./vue-elelctron-wallpaper-release.tgz # 要上传文件
-            asset_name: vue-elelctron-wallpaper-release.tgz # 上传后的文件名
-            asset_content_type: application/x-tgz
-
-      # 第五步：部署到服务器
-      - name: Deploy
-          uses: appleboy/ssh-action@master # 使用ssh链接服务器
-          with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            password: ${{ secrets.PASSWORD }}
-            port: ${{ secrets.PORT }}
-            script: | # 执行命令（运行到服务器）cd：要确保服务器有这个目录； wget：下载上一步的release到服务器； tar：解压； 安装依赖；启动服务
-              mkdir /opt/vue-elelctron-wallpaper
-              cd /opt/vue-elelctron-wallpaper
-              wget https://github.com/xiongyechang/vue-elelctron-wallpaper/releases/latest/download/vue-elelctron-wallpaper-release.tgz -O vue-elelctron-wallpaper-release.tgz
-              tar zxvf vue-elelctron-wallpaper-release.tgz
-              npm install
-              pm2 restart
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.

@@ -29,15 +29,20 @@ jobs:
       - name: Build
         uses: actions/setup-node@master
         # uses 和 run 不能在同一个步骤里面
-        
+      
+      - name: build start
         run: echo Build Start!
 
+      - name: npm install
         run: npm install # 安装第三方包
 
+      - name: npm build
         run: npm run build:linux # 打包
-        
+
+      - name: tar 
         run: tar -zcvf vue-elelctron-wallpaper-release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc wallpaper tempImages src public docs dist_electron # 把源码等文件，打包压缩为release.tgz
 
+      - name: build end
         run: echo Build End!
 
       # Runs a set of commands using the runners shell

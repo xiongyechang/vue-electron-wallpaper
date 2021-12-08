@@ -35,23 +35,23 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # 第一步：下载源码（CI/CD拉取代码到自己的本地）
-      # - name: Checkout
+      - name: Checkout
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        - uses: actions/checkout@master
+       uses: actions/checkout@master
 
       # 第二部：构建
       # Runs a single command using the runners shell
-      # - name: Build
-        - uses: actions/setup-node@master
-        - run: npm install # 安装第三方包
-        - run: npm run build:linux # 打包
-        - run: tar -zcvf vue-elelctron-wallpaper-release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc wallpaper tempImages src public docs dist_electron # 把源码等文件，打包压缩为release.tgz
+      - name: Build
+        uses: actions/setup-node@master
+        run: npm install # 安装第三方包
+        run: npm run build:linux # 打包
+        run: tar -zcvf vue-elelctron-wallpaper-release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc wallpaper tempImages src public docs dist_electron # 把源码等文件，打包压缩为release.tgz
 
       # 第三步：发布 release
       # Runs a set of commands using the runners shell
-      # - name: RCreate Release # 创建Release，可以在仓库看到一个个版本
+      - name: RCreate Release # 创建Release，可以在仓库看到一个个版本
         id: create_release
-        - uses: actions/create-release@master
+        uses: actions/create-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }} # 之前GitHub添加的Token
         with:
@@ -61,9 +61,9 @@ jobs:
           prerelease: false # 是否是预发布
 
       # 第四步：上传构建结果到 Release（把打包的tgz上传到Release）
-      # - name: Upload Release Asset
+      - name: Upload Release Asset
         id: upload-release-asset
-        - uses: actions/upload-release-asset@master
+        uses: actions/upload-release-asset@master
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
@@ -73,8 +73,8 @@ jobs:
           asset_content_type: application/x-tgz
 
       # 第五步：部署到服务器
-      # - name: Deploy
-        - uses: appleboy/ssh-action@master # 使用ssh链接服务器
+      - name: Deploy
+        uses: appleboy/ssh-action@master # 使用ssh链接服务器
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}

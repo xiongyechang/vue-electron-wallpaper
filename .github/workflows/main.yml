@@ -37,7 +37,7 @@ jobs:
       # 第一步：下载源码（CI/CD拉取代码到自己的本地）
       - name: Checkout
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        uses: actions/checkout@master
+      - uses: actions/checkout@master
 
       # 第二部：构建
       # Runs a single command using the runners shell

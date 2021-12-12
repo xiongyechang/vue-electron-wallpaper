@@ -69,16 +69,15 @@ jobs:
           prerelease: false # 是否是预发布
 
       # 第五步：上传构建结果到 Release（把打包的tgz上传到Release）
-      - name: Upload Release Asset
-        # id: upload-release-asset
-        uses: actions/upload-release-asset@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # 上传地址，通过创建Release获取到的
-          asset_path: ./vue-electron-wallpaper-release.tgz # 要上传文件
-          asset_name: vue-electron-wallpaper-release.tgz # 上传后的文件名
-          asset_content_type: application/x-tgz
+      # - name: Upload Release Asset
+      #   uses: actions/upload-release-asset@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # 上传地址，通过创建Release获取到的
+      #     asset_path: ./vue-electron-wallpaper-release.tgz # 要上传文件
+      #     asset_name: vue-electron-wallpaper-release.tgz # 上传后的文件名
+      #     asset_content_type: application/x-tgz
 
       # 第六步：部署到服务器
       - name: Deploy
@@ -91,7 +90,6 @@ jobs:
           script: | # 执行命令（运行到服务器）cd：要确保服务器有这个目录； wget：下载上一步的release到服务器； tar：解压； 安装依赖；启动服务
             mkdir /opt/vue-electron-wallpaper
             cd /opt/vue-electron-wallpaper
-            wget https://github.com/xiongyechang/vue-electron-wallpaper/releases/latest/download/vue-electron-wallpaper-release.tgz -O vue-electron-wallpaper-release.tgz
             tar zxvf vue-electron-wallpaper-release.tgz
             npm install
             pm2 restart

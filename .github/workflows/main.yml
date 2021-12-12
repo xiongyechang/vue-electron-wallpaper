@@ -49,15 +49,15 @@ jobs:
       - name: Build-Setup
         uses: actions/setup-node@master
 
-      - name: Build-Init
+      - name: Build & Compress
         run: |
           npm install
           npm run build:linux
-          tar -zcvf vue-elelctron-wallpaper-release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc wallpaper tempImages src public docs dist_electron
+          tar -zcvf vue-elelctron-wallpaper-release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc src public docs
 
       # 第四步：发布 release
       # Runs a set of commands using the runners shell
-      - name: RCreate Release # 创建Release，可以在仓库看到一个个版本
+      - name: Create Release # 创建Release，可以在仓库看到一个个版本
         # id: create_release
         uses: actions/create-release@master
         env:

@@ -1,6 +1,18 @@
 {
   "name": "vue-electron-wallpaper",
   "version": "0.0.1",
+  "author": {
+    "name": "yechang xiong",
+    "email": "2226791767@qq.com",
+    "url": "https://github.com/xiongyechang"
+  },
+  "maintainers": [{
+    "name": "xiongyechang",
+    "email": "2226791767@qq.com",
+    "url": "https://github.com/xiongyechang"
+  }],
+  "homepage": "https://github.com/xiongyechang/vue-electron-wallpaper",
+  "description": "a wallpaper application from windows, macos & linux",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

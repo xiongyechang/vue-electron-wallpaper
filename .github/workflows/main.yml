@@ -38,7 +38,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@master
 
-      # 第二部：构建
+      # 第二步: 设置node版本
+      - name: Set Node Version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.18.2
+
+      # 第三步：构建
       # Runs a single command using the runners shell
       - name: Build-Setup
         uses: actions/setup-node@master
@@ -50,7 +56,7 @@ jobs:
           cnpm run build:linux
           tar -zcvf vue-elelctron-wallpaper-release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc wallpaper tempImages src public docs dist_electron
 
-      # 第三步：发布 release
+      # 第四步：发布 release
       # Runs a set of commands using the runners shell
       - name: RCreate Release # 创建Release，可以在仓库看到一个个版本
         # id: create_release
@@ -63,7 +69,7 @@ jobs:
           draft: false # 是否是草稿
           prerelease: false # 是否是预发布
 
-      # 第四步：上传构建结果到 Release（把打包的tgz上传到Release）
+      # 第五步：上传构建结果到 Release（把打包的tgz上传到Release）
       - name: Upload Release Asset
         # id: upload-release-asset
         uses: actions/upload-release-asset@master
@@ -75,7 +81,7 @@ jobs:
           asset_name: vue-elelctron-wallpaper-release.tgz # 上传后的文件名
           asset_content_type: application/x-tgz
 
-      # 第五步：部署到服务器
+      # 第六步：部署到服务器
       - name: Deploy
         uses: appleboy/ssh-action@master # 使用ssh链接服务器
         with:

@@ -53,20 +53,31 @@ jobs:
         run: |
           npm install
           npm run build:linux
-          tar -zcvf vue-electron-wallpaper-release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc src public docs
+          tar -zcvf release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc src public docs
 
-      # 第四步：发布 release
-      # Runs a set of commands using the runners shell
-      - name: Create Release # 创建Release，可以在仓库看到一个个版本
+      # 发布 Release
+      - name: Create Release
         id: create_release
         uses: actions/create-release@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 之前GitHub添加的Token
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
-          tag_name: ${{ github.ref }} # (tag)标签名称
+          tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          draft: false # 是否是草稿
-          prerelease: false # 是否是预发布
+          draft: false
+          prerelease: false
+
+      # 上传构建结果到 Release
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./release.tgz
+          asset_name: release.tgz
+          asset_content_type: application/x-tgz
 
       # 第五步：部署到服务器
       - name: Deploy
@@ -79,6 +90,7 @@ jobs:
           script: | # 执行命令（运行到服务器）cd：要确保服务器有这个目录； wget：下载上一步的release到服务器； tar：解压； 安装依赖；启动服务
             mkdir /opt/vue-electron-wallpaper
             cd /opt/vue-electron-wallpaper
-            tar zxvf vue-electron-wallpaper-release.tgz
+            wget https://github.com/xiongyechang/vue-elelctron-wallpaper/releases/latest/download/release.tgz -O release.tgz
+            tar zxvf release.tgz
             npm install
             pm2 restart

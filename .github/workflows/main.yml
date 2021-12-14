@@ -53,9 +53,11 @@ jobs:
         uses: actions/setup-node@master
 
       - name: Build & Compress
-        run: |
-          npm install
-          npm run build:linux
+      - run: npm install
+
+      - npm: run build:linux
+
+      - npm: run build:mac
 
       # 发布 Release
       - name: Create Release
@@ -69,14 +71,26 @@ jobs:
           draft: false
           prerelease: false
 
-      # 上传构建结果到 Release
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 获取 package.json 的版本
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist_electron
-          asset_name: *.deb
-          asset_content_type: application/x-tgz
+          path: ./package.json
+
+      # 上传构建结果到 Release
+      # - name: Upload Release Asset
+      #   id: upload-release-asset
+      #   uses: actions/upload-release-asset@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./dist_electron
+      #     asset_name: *.deb
+      #     asset_content_type: application/x-tgz
+      - name: Upload Release Asset
+        use: actions/upload-artifact@v2
+        with:
+          name: vue-electron-wallpaper
+          path: dist_electron/*${{steps.package-version.outputs.current-version}}*

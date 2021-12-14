@@ -56,10 +56,10 @@ jobs:
         run: npm install
 
       - name: build:linux
-        run: run build:linux
+        run: npm run build:linux
 
-      - name: build:mac
-        run: run build:mac
+      # - name: build:mac
+      #   run: npm run build:mac
 
       # 发布 Release
       - name: Create Release

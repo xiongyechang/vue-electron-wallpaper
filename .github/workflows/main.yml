@@ -80,6 +80,9 @@ jobs:
         with:
           path: package.json
 
+      - name: 'ls'
+        run: 'ls'
+
       - name: Upload Release Asset
         run: echo ${{steps.package-version.outputs.current-version}}
         # uses: actions/upload-artifact@v2

@@ -78,6 +78,7 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
         with:
+          name: pageage.json
           path: package.json
 
       - name: 'ls'

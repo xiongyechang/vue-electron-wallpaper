@@ -52,26 +52,26 @@ jobs:
       - name: Build-Setup
         uses: actions/setup-node@master
 
-      - name: Build & Compress
-        run: npm install
+      # - name: Build & Compress
+      #   run: npm install
 
-      - name: build:linux
-        run: npm run build:linux
+      # - name: build:linux
+      #   run: npm run build:linux
 
       # - name: build:mac
       #   run: npm run build:mac
 
       # 发布 Release
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     draft: false
+      #     prerelease: false
 
       # 获取 package.json 的版本
       - name: get-npm-version
@@ -79,9 +79,10 @@ jobs:
         uses: martinbeentjes/npm-get-version-action@master
         with:
           path: ./package.json
-          
+
       - name: Upload Release Asset
-        uses: actions/upload-artifact@v2
-        with:
-          name: vue-electron-wallpaper-${{steps.package-version.outputs.current-version}}.AppImage
-          path: dist_electron/vue-electron-wallpaper-${{steps.package-version.outputs.current-version}}.AppImage
+        run: echo ${{steps.package-version.outputs.current-version}}
+        # uses: actions/upload-artifact@v2
+        # with:
+        #   name: vue-electron-wallpaper-${{steps.package-version.outputs.current-version}}.AppImage
+        #   path: dist_electron/vue-electron-wallpaper-${{steps.package-version.outputs.current-version}}.AppImage

@@ -56,7 +56,6 @@ jobs:
         run: |
           npm install
           npm run build:linux
-          tar -zcvf release.tgz vue.config.js tsconfig.json README.md package.json package-lock.json babel.config.js .gitignore .eslintrc.js .browserslistrc src public docs
 
       # 发布 Release
       - name: Create Release
@@ -78,21 +77,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./
-          asset_name: release.tgz
+          asset_path: ./dist_electron
+          asset_name: *.deb
           asset_content_type: application/x-tgz
-
-      # 第五步：部署到服务器
-      - name: Deploy
-        uses: appleboy/ssh-action@master # 使用ssh链接服务器
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: | # 执行命令（运行到服务器）cd：要确保服务器有这个目录； wget：下载上一步的release到服务器； tar：解压； 安装依赖；启动服务
-            cd /opt/vue-electron-wallpaper
-            wget https://github.com/xiongyechang/vue-elelctron-wallpaper/releases/latest/download/release.tgz -O release.tgz
-            tar zxvf release.tgz
-            npm install --production
-            pm2 restart

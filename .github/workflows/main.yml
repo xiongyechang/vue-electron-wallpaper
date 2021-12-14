@@ -53,13 +53,13 @@ jobs:
         uses: actions/setup-node@master
 
       - name: Build & Compress
-      - run: npm install
+        run: npm install
 
       - name: build:linux
-      - run: run build:linux
+        run: run build:linux
 
       - name: build:mac
-      - run: run build:mac
+        run: run build:mac
 
       # 发布 Release
       - name: Create Release

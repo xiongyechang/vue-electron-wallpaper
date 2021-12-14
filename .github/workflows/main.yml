@@ -55,8 +55,10 @@ jobs:
       - name: Build & Compress
       - run: npm install
 
+      - name: build:linux
       - npm: run build:linux
 
+      - name: build:mac
       - npm: run build:mac
 
       # 发布 Release

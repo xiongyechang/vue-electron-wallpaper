@@ -79,20 +79,9 @@ jobs:
         uses: martinbeentjes/npm-get-version-action@master
         with:
           path: ./package.json
-
-      # 上传构建结果到 Release
-      # - name: Upload Release Asset
-      #   id: upload-release-asset
-      #   uses: actions/upload-release-asset@master
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ./dist_electron
-      #     asset_name: *.deb
-      #     asset_content_type: application/x-tgz
+          
       - name: Upload Release Asset
         uses: actions/upload-artifact@v2
         with:
-          name: vue-electron-wallpaper
-          path: dist_electron/*${{steps.package-version.outputs.current-version}}*
+          name: vue-electron-wallpaper-${{steps.package-version.outputs.current-version}}.AppImage
+          path: dist_electron/vue-electron-wallpaper-${{steps.package-version.outputs.current-version}}.AppImage

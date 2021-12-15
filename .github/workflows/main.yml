@@ -6,13 +6,13 @@ on:
   # Triggers the workflow on push or pull request events but only for the master branch
   # tags: # 当我们提交代码为tag 是以'v'开头的时候才会触发自动部署到服务端 如 git push tag v0.1.0
   #     - 'v*'
-  # push:
-  #   branches: [ master ]
+  push:
+    branches: [ master ]
   # pull_request:
   #   branches: [ master ]
-  push:
-    tags:
-      - "v*"
+  # push:
+  #   tags:
+  #     - "v*"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -47,40 +47,45 @@ jobs:
         with:
           node-version: 14.18.2
 
+      - name: 'ls'
+        run: echo "${{github.action_path}}"
+
+        run: echo "${{github.repository}}"
+
       # 第三步：构建
       # Runs a single command using the runners shell
-      - name: Build-Setup
-        uses: actions/setup-node@master
+      # - name: Build-Setup
+      #   uses: actions/setup-node@master
 
-      - name: Build & Compress
-        run: npm install
+      # - name: Build & Compress
+      #   run: npm install
 
-      - name: build:linux
-        run: npm run build:linux
+      # - name: build:linux
+      #   run: npm run build:linux
 
       # - name: build:mac
       #   run: npm run build:mac
 
       # 发布 Release
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     draft: false
+      #     prerelease: false
 
-      - name: Upload Release Asset AppImage
-        uses: actions/upload-artifact@v2
-        with:
-          name: vue-electron-wallpaper.AppImage
-          path: dist_electron/*.AppImage
+      # - name: Upload Release Asset AppImage
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: vue-electron-wallpaper.AppImage
+      #     path: dist_electron/*.AppImage
       
-      - name: Upload Release Asset deb
-        uses: actions/upload-artifact@v2
-        with:
-          name: vue-electron-wallpaper.deb
-          path: dist_electron/*.deb
+      # - name: Upload Release Asset deb
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: vue-electron-wallpaper.deb
+      #     path: dist_electron/*.deb

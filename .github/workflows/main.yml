@@ -60,6 +60,8 @@ jobs:
 
       # - name: build:mac
       #   run: npm run build:mac
+      - name: 'list'
+        run: ls
 
       # 发布 Release
       # - name: Create Release

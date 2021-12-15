@@ -49,7 +49,8 @@ jobs:
 
       - name: 'ls'
         run: echo "${{github.action_path}}"
-
+        
+      - name: 'ls2'
         run: echo "${{github.repository}}"
 
       # 第三步：构建

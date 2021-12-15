@@ -47,6 +47,9 @@ jobs:
         with:
           node-version: 14.18.2
 
+      - name: Build & Compress
+        run: npm install
+
       - name: ls
         run: ls
 
@@ -64,9 +67,6 @@ jobs:
       # Runs a single command using the runners shell
       # - name: Build-Setup
       #   uses: actions/setup-node@master
-
-      # - name: Build & Compress
-      #   run: npm install
 
       # - name: build:linux
       #   run: npm run build:linux

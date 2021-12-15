@@ -47,11 +47,15 @@ jobs:
         with:
           node-version: 14.18.2
 
-      - name: Dump GitHub context
-        run: echo ${{github.path}}
+      - name: Get package.json meta
+        id: get_metadata
+        run: node ${{github.workspace}}/.github/get-metadata.js
 
       - name: Dump GitHub context
-        run: echo ${{github.workspace}}
+        run: echo ${{steps.get_metadata.outputs.VERSION}}
+
+      - name: Dump GitHub context
+        run: echo ${{steps.get_metadata.outputs.NAME}}
 
       # 第三步：构建
       # Runs a single command using the runners shell

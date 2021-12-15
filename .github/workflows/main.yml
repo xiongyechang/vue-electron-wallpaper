@@ -47,11 +47,10 @@ jobs:
         with:
           node-version: 14.18.2
 
-      - name: 'ls'
-        run: echo ${{github.action_path}}
-
-      - name: 'ls2'
-        run: echo ${{github.repository}}
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
       # 第三步：构建
       # Runs a single command using the runners shell

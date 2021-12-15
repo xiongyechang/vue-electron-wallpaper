@@ -47,6 +47,9 @@ jobs:
         with:
           node-version: 14.18.2
 
+      - name: ls
+        run: ls
+
       - name: Get package.json meta
         id: get_metadata
         run: node ${{github.workspace}}/.github/get-metadata.js

@@ -50,6 +50,9 @@ jobs:
       - name: Dump GitHub context
         run: echo ${{github.path}}
 
+      - name: Dump GitHub context
+        run: echo ${{github.action_path}}
+
       # 第三步：构建
       # Runs a single command using the runners shell
       # - name: Build-Setup

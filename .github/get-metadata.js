@@ -1,6 +1,7 @@
 // get-metadata.js
 const core = require('@actions/core')
-const { version, name } = require(process.env.GITHUB_WORKSPACE + 'package.json')
+const path = require('path');
+const { version, name } = require(path.join(process.env.GITHUB_WORKSPACE, 'package.json'))
 core.exportVariable('VERSION', version)
 core.exportVariable('NAME', name)
 

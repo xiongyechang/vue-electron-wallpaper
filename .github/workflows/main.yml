@@ -83,23 +83,23 @@ jobs:
           NAME: ${{ steps.get_metadata.outputs.NAME }}
           VERSION: ${{ steps.get_metadata.outputs.VERSION }}
         with:
-          name: $NAME-$VERSION.AppImage
-          path: dist_electron/$NAME-$VERSION.AppImage
+          name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.AppImage
+          path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.AppImage
       
-      - name: Upload Release Asset:deb
-        uses: actions/upload-artifact@v2
-        env:
-          NAME: ${{ steps.get_metadata.outputs.NAME }}
-          VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-        with:
-          name: $NAME-$VERSION.deb
-          path: dist_electron/$NAME-$VERSION.deb
+      # - name: Upload Release Asset:deb
+      #   uses: actions/upload-artifact@v2
+      #   env:
+      #     NAME: ${{ steps.get_metadata.outputs.NAME }}
+      #     VERSION: ${{ steps.get_metadata.outputs.VERSION }}
+      #   with:
+      #     name: $NAME-$VERSION.deb
+      #     path: dist_electron/$NAME_$VERSION_amd64.deb
 
-      - name: Upload Release Asset:rpm
-        uses: actions/upload-artifact@v2
-        env:
-          NAME: ${{ steps.get_metadata.outputs.NAME }}
-          VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-        with:
-          name: $NAME-$VERSION.rpm
-          path: dist_electron/$NAME-$VERSION.rpm
+      # - name: Upload Release Asset:rpm
+      #   uses: actions/upload-artifact@v2
+      #   env:
+      #     NAME: ${{ steps.get_metadata.outputs.NAME }}
+      #     VERSION: ${{ steps.get_metadata.outputs.VERSION }}
+      #   with:
+      #     name: $NAME-$VERSION.rpm
+      #     path: dist_electron/$NAME-$VERSION.x86_64.rpm

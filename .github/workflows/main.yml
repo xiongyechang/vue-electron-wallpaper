@@ -76,6 +76,12 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: echo name & version
+        env: 
+          NAME: ${{ steps.get_metadata.outputs.NAME }}
+          VERSION: ${{ steps.get_metadata.outputs.VERSION }}
+        run: echo "$NAME:$VERSION"
+        
       # 上传各种打包好的应用
       - name: Upload Release Asset:AppImage
         uses: actions/upload-artifact@v2
@@ -86,20 +92,20 @@ jobs:
           name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.AppImage
           path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.AppImage
       
-      # - name: Upload Release Asset:deb
-      #   uses: actions/upload-artifact@v2
-      #   env:
-      #     NAME: ${{ steps.get_metadata.outputs.NAME }}
-      #     VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-      #   with:
-      #     name: $NAME-$VERSION.deb
-      #     path: dist_electron/$NAME_$VERSION_amd64.deb
+      - name: Upload Release Asset:deb
+        uses: actions/upload-artifact@v2
+        env:
+          NAME: ${{ steps.get_metadata.outputs.NAME }}
+          VERSION: ${{ steps.get_metadata.outputs.VERSION }}
+        with:
+          name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
+          path: dist_electron/${{ steps.get_metadata.outputs.NAME }}_${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
 
-      # - name: Upload Release Asset:rpm
-      #   uses: actions/upload-artifact@v2
-      #   env:
-      #     NAME: ${{ steps.get_metadata.outputs.NAME }}
-      #     VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-      #   with:
-      #     name: $NAME-$VERSION.rpm
-      #     path: dist_electron/$NAME-$VERSION.x86_64.rpm
+      - name: Upload Release Asset:rpm
+        uses: actions/upload-artifact@v2
+        env:
+          NAME: ${{ steps.get_metadata.outputs.NAME }}
+          VERSION: ${{ steps.get_metadata.outputs.VERSION }}
+        with:
+          name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
+          path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm

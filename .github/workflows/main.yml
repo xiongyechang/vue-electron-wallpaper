@@ -84,7 +84,7 @@ jobs:
         run: echo "$NAME:$VERSION:$UPLOADURL"
 
       - name: Upload Release Asset:AppImage
-        id: upload-release-asset:AppImage
+        id: upload-release-asset-AppImage
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -95,7 +95,7 @@ jobs:
           asset_content_type: application/octet-stream
 
       - name: Upload Release Asset:deb
-        id: upload-release-asset:deb
+        id: upload-release-asset-deb
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -106,7 +106,7 @@ jobs:
           asset_content_type: application/octet-stream
         
       - name: Upload Release Asset:rpm
-        id: upload-release-asset:rpm
+        id: upload-release-asset-rpm
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

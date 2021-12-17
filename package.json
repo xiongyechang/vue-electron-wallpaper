@@ -38,6 +38,7 @@
     "electron-updater": "^4.6.1",
     "element-plus": "^1.2.0-beta.5",
     "fs-extra": "^10.0.0",
+    "js-yaml": "^4.1.0",
     "v-contextmenu": "^3.0.0",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",

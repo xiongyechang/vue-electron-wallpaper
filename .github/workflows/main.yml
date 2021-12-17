@@ -83,8 +83,8 @@ jobs:
           UPLOADURL: ${{ steps.create_release.outputs.upload_url }}
         run: echo "$NAME:$VERSION:$UPLOADURL"
 
-      - name: Upload Release Asset
-        id: upload-release-asset 
+      - name: Upload Release Asset:AppImage
+        id: upload-release-asset:AppImage
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -94,31 +94,26 @@ jobs:
           asset_name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.AppImage
           asset_content_type: application/octet-stream
 
+      - name: Upload Release Asset:deb
+        id: upload-release-asset:deb
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: dist_electron/${{ steps.get_metadata.outputs.NAME }}_${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
+          asset_name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
+          asset_content_type: application/octet-stream
         
-      # 上传各种打包好的应用
-      # - name: Upload Release Asset:AppImage
-      #   uses: actions/upload-artifact@v2
-      #   env:
-      #     NAME: ${{ steps.get_metadata.outputs.NAME }}
-      #     VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-      #   with:
-      #     name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.AppImage
-      #     path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.AppImage
-      
-      # - name: Upload Release Asset:deb
-      #   uses: actions/upload-artifact@v2
-      #   env:
-      #     NAME: ${{ steps.get_metadata.outputs.NAME }}
-      #     VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-      #   with:
-      #     name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
-      #     path: dist_electron/${{ steps.get_metadata.outputs.NAME }}_${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
+      - name: Upload Release Asset:rpm
+        id: upload-release-asset:rpm
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
+          asset_name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
+          asset_content_type: application/octet-stream
 
-      # - name: Upload Release Asset:rpm
-      #   uses: actions/upload-artifact@v2
-      #   env:
-      #     NAME: ${{ steps.get_metadata.outputs.NAME }}
-      #     VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-      #   with:
-      #     name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
-      #     path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
+      

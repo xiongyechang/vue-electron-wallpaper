@@ -29,19 +29,19 @@ console.log(out);
 
 fs.writeFileSync(linuxLatestYaml, out);
 
-const exe_download_rul = core.getInput('exe_download_url', { required: true });
-const WindowsLatestYaml = path.join(dist, 'latest.yml');
-const wdoc = yaml.load((fs.readFileSync(WindowsLatestYaml)).toString());
-console.log(wdoc);
-const files = wdoc.files;
-files.forEach(file => {
-  file.url = exe_download_rul;
-});
+// const exe_download_rul = core.getInput('exe_download_url', { required: true });
+// const WindowsLatestYaml = path.join(dist, 'latest.yml');
+// const wdoc = yaml.load((fs.readFileSync(WindowsLatestYaml)).toString());
+// console.log(wdoc);
+// const files = wdoc.files;
+// files.forEach(file => {
+//   file.url = exe_download_rul;
+// });
 
-const wout = yaml.dump(wdoc);
-console.log(wout);
+// const wout = yaml.dump(wdoc);
+// console.log(wout);
 
-fs.writeFileSync(WindowsLatestYaml, wout);
+// fs.writeFileSync(WindowsLatestYaml, wout);
 
 
 

@@ -162,7 +162,10 @@ jobs:
           NAME: ${{ steps.get_metadata.outputs.NAME }}
           VERSION: ${{ steps.get_metadata.outputs.VERSION }}
           UPLOADURL: ${{ steps.create_release.outputs.upload_url }}
-        run: echo "$NAME:$VERSION:$UPLOADURL"
+        run: |
+          echo "$NAME"
+          echo "$VERSION"
+          echo "$UPLOADURL"
 
       - name: Upload Release Asset:exe
         id: upload-release-asset-exe

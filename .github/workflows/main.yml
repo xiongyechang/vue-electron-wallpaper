@@ -93,7 +93,6 @@ jobs:
           name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
         
       - name: Upload Release Asset:rpm
-        id: upload-release-asset-rpm
         uses: actions/upload-artifact@v2
         with:
           path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
@@ -151,23 +150,13 @@ jobs:
           echo "$UPLOADURL"
 
       - name: Upload Release Asset:exe
-        id: upload-release-asset-exe
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/upload-artifact@v2
         with:
-          upload_url: ${{ steps.create_win_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: dist_electron/${{steps.get_metadata.outputs.NAME}}@${{steps.get_metadata.outputs.VERSION}}.exe
-          asset_name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe
-          asset_content_type: application/octet-stream
+          path: dist_electron/${{steps.get_metadata.outputs.NAME}}@${{steps.get_metadata.outputs.VERSION}}.exe
+          name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe
 
       - name: Upload Windows:Blockmap
-        id: upload-windows-yaml-blockmap
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/upload-artifact@v2
         with:
-          upload_url: ${{ steps.create_win_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: dist_electron/${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
-          asset_name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
-          asset_content_type: application/octet-stream
+          path: dist_electron/${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
+          name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap

@@ -61,12 +61,9 @@ jobs:
       - name: build:linux
         run: npm run build:linux
 
-      # - name: build:mac
-      #   run: npm run build:mac
-
       # 发布 Release
       - name: Create Release
-        id: create_release
+        id: create_linux_release
         uses: actions/create-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -80,7 +77,7 @@ jobs:
         env: 
           NAME: ${{ steps.get_metadata.outputs.NAME }}
           VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-          UPLOADURL: ${{ steps.create_release.outputs.upload_url }}
+          UPLOADURL: ${{ steps.create_linux_release.outputs.upload_url }}
         run: echo "$NAME:$VERSION:$UPLOADURL"
 
       - name: Upload Release Asset:AppImage
@@ -89,7 +86,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          upload_url: ${{ steps.create_linux_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: dist_electron/${{steps.get_metadata.outputs.NAME}}-${{steps.get_metadata.outputs.VERSION}}.AppImage
           asset_name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.AppImage
           asset_content_type: application/octet-stream
@@ -100,7 +97,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          upload_url: ${{ steps.create_linux_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: dist_electron/${{ steps.get_metadata.outputs.NAME }}_${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
           asset_name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
           asset_content_type: application/octet-stream
@@ -111,7 +108,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          upload_url: ${{ steps.create_linux_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
           asset_name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
           asset_content_type: application/octet-stream
@@ -147,7 +144,7 @@ jobs:
 
       # 发布 Release
       - name: Create Release
-        id: create_release
+        id: create_win_release
         uses: actions/create-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -161,8 +158,11 @@ jobs:
         env: 
           NAME: ${{ steps.get_metadata.outputs.NAME }}
           VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-          UPLOADURL: ${{ steps.create_release.outputs.upload_url }}
-        run: echo "$NAME:$VERSION:$UPLOADURL"
+          UPLOADURL: ${{ steps.create_win_release.outputs.upload_url }}
+        run: |
+          echo "$NAME"
+          echo "$VERSION"
+          echo "$UPLOADURL"
 
       - name: Upload Release Asset:exe
         id: upload-release-asset-exe
@@ -170,7 +170,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          upload_url: ${{ steps.create_win_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: dist_electron/${{steps.get_metadata.outputs.NAME}}@${{steps.get_metadata.outputs.VERSION}}.exe
           asset_name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe
           asset_content_type: application/octet-stream
@@ -181,7 +181,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.blockmap
-          asset_name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.blockmap
+          upload_url: ${{ steps.create_win_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: dist_electron/${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
+          asset_name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
           asset_content_type: application/octet-stream

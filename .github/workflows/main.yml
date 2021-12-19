@@ -1,5 +1,5 @@
 # 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
-name: vue-electron-wallpaper Actions
+name: vue-electron-wallpaper actions
 
 # Controls when the workflow will run
 on:
@@ -102,3 +102,14 @@ jobs:
           asset_path: dist_electron/${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
           asset_name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
           asset_content_type: application/octet-stream
+
+      - name: Upload Windows:yaml
+        id: upload-windows-yaml
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: dist_electron/latest.yml
+          asset_name: latest.yml
+          asset_content_type: text/yml

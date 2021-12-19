@@ -99,43 +99,43 @@ jobs:
           path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
           name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
 
-  Windows:
-    runs-on: windows-latest
+  # Windows:
+  #   runs-on: windows-latest
 
-    steps:
-      # 第一步：下载源码（CI/CD拉取代码到自己的本地）
-      - name: Checkout
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        uses: actions/checkout@master
+  #   steps:
+  #     # 第一步：下载源码（CI/CD拉取代码到自己的本地）
+  #     - name: Checkout
+  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+  #       uses: actions/checkout@master
 
-      # 第二步: 设置node版本
-      - name: Set Node Version
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.18.2
+  #     # 第二步: 设置node版本
+  #     - name: Set Node Version
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 14.18.2
 
-      - name: Install Packages
-        run: npm install
+  #     - name: Install Packages
+  #       run: npm install
 
-      - name: Get package.json meta
-        id: get_metadata
-        run: node ${{github.workspace}}/.github/actions/get-metadata.js
+  #     - name: Get package.json meta
+  #       id: get_metadata
+  #       run: node ${{github.workspace}}/.github/actions/get-metadata.js
 
-      # 构建
-      - name: Build-Setup
-        uses: actions/setup-node@master
+  #     # 构建
+  #     - name: Build-Setup
+  #       uses: actions/setup-node@master
 
-      - name: build:win
-        run: npm run build:win
+  #     - name: build:win
+  #       run: npm run build:win
 
-      - name: Upload Release Asset:exe
-        uses: actions/upload-artifact@v2
-        with:
-          path: dist_electron/${{steps.get_metadata.outputs.NAME}}@${{steps.get_metadata.outputs.VERSION}}.exe
-          name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe
+  #     - name: Upload Release Asset:exe
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         path: dist_electron/${{steps.get_metadata.outputs.NAME}}@${{steps.get_metadata.outputs.VERSION}}.exe
+  #         name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe
 
-      - name: Upload Windows:Blockmap
-        uses: actions/upload-artifact@v2
-        with:
-          path: dist_electron/${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
-          name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
+  #     - name: Upload Windows:Blockmap
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         path: dist_electron/${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
+  #         name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap

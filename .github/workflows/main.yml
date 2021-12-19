@@ -61,25 +61,6 @@ jobs:
       - name: build:linux
         run: npm run build:linux
 
-      # 发布 Release
-      - name: Create Release
-        id: create_linux_release
-        uses: actions/create-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}_linux
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: echo name & version
-        env: 
-          NAME: ${{ steps.get_metadata.outputs.NAME }}
-          VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-          UPLOADURL: ${{ steps.create_linux_release.outputs.upload_url }}
-        run: echo "$NAME:$VERSION:$UPLOADURL"
-
       - name: Upload Release Asset:AppImage
         uses: actions/upload-artifact@v2
         with:
@@ -126,28 +107,6 @@ jobs:
 
       - name: build:win
         run: npm run build:win
-
-      # 发布 Release
-      - name: Create Release
-        id: create_win_release
-        uses: actions/create-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}_windows
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: echo name & version
-        env: 
-          NAME: ${{ steps.get_metadata.outputs.NAME }}
-          VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-          UPLOADURL: ${{ steps.create_win_release.outputs.upload_url }}
-        run: |
-          echo "$NAME"
-          echo "$VERSION"
-          echo "$UPLOADURL"
 
       - name: Upload Release Asset:exe
         uses: actions/upload-artifact@v2

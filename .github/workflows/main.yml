@@ -1,5 +1,5 @@
 # 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
-name: vue-electron-wallpaper Actions
+name: build Windows
 
 # Controls when the workflow will run
 on:
@@ -30,11 +30,78 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  Linux:
+  # Linux:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
+    # steps:
+      # 第一步：下载源码（CI/CD拉取代码到自己的本地）
+      # - name: Checkout
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        # uses: actions/checkout@master
+
+      # 第二步: 设置node版本
+      # - name: Set Node Version
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: 14.18.2
+
+      # - name: Install Packages
+      #   run: npm install
+
+      # - name: Get package.json meta
+      #   id: get_metadata
+      #   run: node ${{github.workspace}}/.github/actions/get-metadata.js
+
+      # # 构建
+      # - name: Build-Setup
+      #   uses: actions/setup-node@master
+
+      # - name: build:linux
+      #   run: npm run build:linux
+
+      # # 发布 Release
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     body: ${{ github.event.head_commit.message }}
+      #     draft: false
+      #     prerelease: false
+
+      # - name: echo name & version
+      #   env: 
+      #     NAME: ${{ steps.get_metadata.outputs.NAME }}
+      #     VERSION: ${{ steps.get_metadata.outputs.VERSION }}
+      #     UPLOADURL: ${{ steps.create_release.outputs.upload_url }}
+      #   run: echo "$NAME:$VERSION:$UPLOADURL"
+
+      # - name: Upload Release Asset:AppImage
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     path: dist_electron/${{steps.get_metadata.outputs.NAME}}-${{steps.get_metadata.outputs.VERSION}}.AppImage
+      #     name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.AppImage
+
+      # - name: Upload Release Asset:deb
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     path: dist_electron/${{ steps.get_metadata.outputs.NAME }}_${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
+      #     name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
+        
+      # - name: Upload Release Asset:rpm
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
+      #     name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
+
+  Windows:
+    runs-on: windows-latest
+
     steps:
       # 第一步：下载源码（CI/CD拉取代码到自己的本地）
       - name: Checkout
@@ -58,10 +125,10 @@ jobs:
       - name: Build-Setup
         uses: actions/setup-node@master
 
-      - name: build:linux
-        run: npm run build:linux
+      - name: build:win
+        run: npm run build:win
 
-      # 发布 Release
+        # 发布 Release
       - name: Create Release
         id: create_release
         uses: actions/create-release@master
@@ -74,68 +141,14 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: echo name & version
-        env: 
-          NAME: ${{ steps.get_metadata.outputs.NAME }}
-          VERSION: ${{ steps.get_metadata.outputs.VERSION }}
-          UPLOADURL: ${{ steps.create_release.outputs.upload_url }}
-        run: echo "$NAME:$VERSION:$UPLOADURL"
-
-      - name: Upload Release Asset:AppImage
+      - name: Upload Release Asset:exe
         uses: actions/upload-artifact@v2
         with:
-          path: dist_electron/${{steps.get_metadata.outputs.NAME}}-${{steps.get_metadata.outputs.VERSION}}.AppImage
-          name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.AppImage
+          path: dist_electron/${{steps.get_metadata.outputs.NAME}}@${{steps.get_metadata.outputs.VERSION}}.exe
+          name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe
 
-      - name: Upload Release Asset:deb
+      - name: Upload Windows:Blockmap
         uses: actions/upload-artifact@v2
         with:
-          path: dist_electron/${{ steps.get_metadata.outputs.NAME }}_${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
-          name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}_amd64.deb
-        
-      - name: Upload Release Asset:rpm
-        uses: actions/upload-artifact@v2
-        with:
-          path: dist_electron/${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
-          name: ${{ steps.get_metadata.outputs.NAME }}-${{ steps.get_metadata.outputs.VERSION }}.x86_64.rpm
-
-  # Windows:
-  #   runs-on: windows-latest
-
-  #   steps:
-  #     # 第一步：下载源码（CI/CD拉取代码到自己的本地）
-  #     - name: Checkout
-  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-  #       uses: actions/checkout@master
-
-  #     # 第二步: 设置node版本
-  #     - name: Set Node Version
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 14.18.2
-
-  #     - name: Install Packages
-  #       run: npm install
-
-  #     - name: Get package.json meta
-  #       id: get_metadata
-  #       run: node ${{github.workspace}}/.github/actions/get-metadata.js
-
-  #     # 构建
-  #     - name: Build-Setup
-  #       uses: actions/setup-node@master
-
-  #     - name: build:win
-  #       run: npm run build:win
-
-  #     - name: Upload Release Asset:exe
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         path: dist_electron/${{steps.get_metadata.outputs.NAME}}@${{steps.get_metadata.outputs.VERSION}}.exe
-  #         name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe
-
-  #     - name: Upload Windows:Blockmap
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         path: dist_electron/${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
-  #         name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
+          path: dist_electron/${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
+          name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap

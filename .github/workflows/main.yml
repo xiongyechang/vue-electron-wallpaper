@@ -61,10 +61,10 @@ jobs:
 
       # 创建 tag
       - name: Create Tag
-        uses: rickstaa/action-create-tag@v1
+        uses: laputansoft/github-tag-action@v4.6
         with:
           tag: v${{ steps.get_metadata.outputs.VERSION }}
-          message: ${{ github.event.head_commit.message }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # 发布 Release
       - name: Create Release

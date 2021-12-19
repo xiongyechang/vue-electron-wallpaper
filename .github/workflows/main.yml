@@ -8,10 +8,8 @@ on:
   #     - 'v*'
   push:
     branches: [ main ]
-  merge:
+  pull_request:
     branches: [ main ]
-  # pull_request:
-  #   branches: [ master ]
   # push:
   #   tags:
   #     - "v*"

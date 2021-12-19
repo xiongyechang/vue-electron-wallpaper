@@ -61,6 +61,26 @@ jobs:
       - name: build:linux
         run: npm run build:linux
 
+      # 发布 Release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false
+
+      - name: echo name & version
+        env: 
+          NAME: ${{ steps.get_metadata.outputs.NAME }}
+          VERSION: ${{ steps.get_metadata.outputs.VERSION }}
+          UPLOADURL: ${{ steps.create_release.outputs.upload_url }}
+        run: echo "$NAME:$VERSION:$UPLOADURL"
+
       - name: Upload Release Asset:AppImage
         uses: actions/upload-artifact@v2
         with:

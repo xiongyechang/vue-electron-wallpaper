@@ -142,13 +142,13 @@ jobs:
           prerelease: false
 
       - name: Upload Release Asset:exe
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@master
         with:
           path: dist_electron/${{steps.get_metadata.outputs.NAME}}@${{steps.get_metadata.outputs.VERSION}}.exe
           name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe
 
       - name: Upload Windows:Blockmap
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@master
         with:
           path: dist_electron/${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
           name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap

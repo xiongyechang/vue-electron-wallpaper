@@ -1,0 +1,10 @@
+name: 'Change latest.yml Info'
+description: 'change dist_electron latest.yml infomation'
+author: 'xiongyechang'
+inputs:
+  asset_url:
+    description: 'the url of asset'
+    required: true
+runs:
+  using: 'node12'
+  main: './index.js'

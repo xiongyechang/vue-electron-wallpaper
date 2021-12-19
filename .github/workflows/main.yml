@@ -6,13 +6,15 @@ on:
   # Triggers the workflow on push or pull request events but only for the master branch
   # tags: # 当我们提交代码为tag 是以'v'开头的时候才会触发自动部署到服务端 如 git push tag v0.1.0
   #     - 'v*'
-  # push:
-  #   branches: [ master ]
+  push:
+    branches: [ main ]
+  merge:
+    branches: [ main ]
   # pull_request:
   #   branches: [ master ]
-  push:
-    tags:
-      - "v*"
+  # push:
+  #   tags:
+  #     - "v*"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -59,6 +61,13 @@ jobs:
       - name: build:win
         run: npm run build:win
 
+      # 创建 tag
+      - name: Create Tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: v${{ steps.get_metadata.outputs.VERSION }}
+          message: ${{ github.event.head_commit.message }}
+
       # 发布 Release
       - name: Create Release
         id: create_release
@@ -68,6 +77,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
+          body: ${{ github.event.head_commit.message }}
           draft: false
           prerelease: false
 
@@ -102,7 +112,12 @@ jobs:
           asset_path: dist_electron/${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
           asset_name: ${{ steps.get_metadata.outputs.NAME }}@${{ steps.get_metadata.outputs.VERSION }}.exe.blockmap
           asset_content_type: application/octet-stream
-
+      # 把 latest.yml 文件信息改掉
+      - name: Change latest.yml Info
+        uses: ./.github/actions/latest-yml-changer
+        with:
+          asset_url: ${{ steps.upload-release-asset-exe.outputs.browser_download_url }}
+      # 再把 latest.yml 文件上传
       - name: Upload Windows:yaml
         id: upload-windows-yaml
         uses: actions/upload-release-asset@v1
